@@ -1,0 +1,77 @@
+// Алгоритм шифрования с помощью шифра Виженера
+
+#include <iostream>
+#include <cstring>
+#include <windows.h>
+using namespace std;
+
+const int STR_SIZE = 512;
+
+int alphCheck(char* alph, char* str, int iter) {
+	for (int i = 0; i < strlen(alph); i++) {
+		if (str[iter] == alph[i])
+			return 1;
+	}
+	return 0;
+}
+
+int alphNum(char* alph, char* str, int iter) {
+	for (int i = 0; i < strlen(alph); i++) {
+		if (str[iter] == alph[i]) {
+			return i;
+		}
+	}
+}
+
+int alphShift(char* alph, int str_num, int shift_num) {
+	for (int i = 0; i < shift_num; i++) {
+		str_num++;
+		if (str_num >= strlen(alph))
+			str_num = 0;
+	}
+	return str_num;
+}
+
+int spaceDel(char* str) {
+	for (int i = 0; i < strlen(str); i++) {
+		if (str[i] == ' ') {
+			for (int j = i; j < strlen(str); j++)
+				str[j] = str[j + 1];
+		}
+	}
+	return 0;
+}
+
+int VigenerCipher(char* str, char* key_word) {
+	char alph0[] = { "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" };
+	int k_num = 0;
+	char new_str[STR_SIZE];
+	strcpy_s(new_str, str);
+	spaceDel(new_str);
+	for (int i = 0; i < strlen(new_str); i++) {
+		if (k_num >= strlen(key_word))
+			k_num = 0;
+		if (alphCheck(alph0, new_str, i)) {
+			int shift = alphNum(alph0, key_word, k_num);
+			int str_num = alphNum(alph0, new_str, i);
+			int ciphr_num = alphShift(alph0, str_num, shift);
+			new_str[i] = alph0[ciphr_num] ;
+			k_num++;
+		}
+	}
+	cout << endl << "The resulting cipher:" << endl;
+	cout << new_str;
+	return 0;
+}
+
+int main() {
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	char str[STR_SIZE], key_word[16];
+	cout << "Enter the text:" << endl;
+	fgets(str, STR_SIZE, stdin);
+	cout << endl << "Put the key_word:" << endl;
+	cin >> key_word;
+	VigenerCipher(str, key_word);
+	return 0;
+}
