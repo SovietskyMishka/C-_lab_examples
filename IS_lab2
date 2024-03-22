@@ -1,0 +1,35 @@
+#include <iostream>
+#include <tuple>
+using namespace std;
+
+tuple<int, int, int> EEA(int a, int b) {
+ if (a == 0) {
+   return make_tuple(b, 0, 1);
+ }
+ int nod, x, y;
+ tie(nod, x, y) = EEA(b % a, a);
+ return make_tuple(nod, (y - (b / a) * x), x);
+}
+
+int binary(int decimal) {
+ if (decimal == 0)
+   return 0;
+ else
+   return (decimal % 2 + 10 * binary(decimal / 2));
+}
+
+int main()
+{
+ setlocale(LC_ALL, "rus");
+ int a, b;
+ cout << "РАСШИРЕННЫЙ АЛГОРИТМ ЕВКЛИДА:\nВведите два числа:" << endl;
+ cin >> a >> b;
+ tuple<int, int, int> t = EEA(a, b);
+ int nod = get<0>(t);
+ int x = get<1>(t);
+ int y = get<2>(t);
+ cout << "НОД = " << nod << endl;
+ cout << "Коэффициенты Безу:\nx = " << x << " y = " << y << endl;
+ cout << "Двоичное представление НОД: " << binary(nod) << endl;
+ return 0;
+}
