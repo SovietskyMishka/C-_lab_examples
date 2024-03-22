@@ -1,0 +1,109 @@
+#include <iostream>
+#include <cstring>
+#include <ctime>
+#include <Windows.h>
+using namespace std;
+
+const int STR_SIZE = 1024;
+
+int alphCheck(char str, char* a2) {		//	Ф-ция проверки алфавита
+	for (int i = 0; i < strlen(a2); i++) {
+		if (a2[i] == str)
+			return 1;
+	}
+	return 0;
+}
+
+void title_changer(char* new_str, char* a1, char* a2) {		//	Ф-ция для замены заглавных букв
+	for (int i = 0; i < strlen(new_str); i++) {
+		for (int j = 0; j < strlen(a1); j++) {
+			if (new_str[i] == a1[j]) {
+				new_str[i] = a2[j];
+				break;
+			}
+		}
+	}
+}
+
+void frequencyAnalysis(char* str, int* shift, char* a1, char* a2) {		//	Ф-ция частотного анализа
+	int count, max = 0;
+	char common, max_common = ' ';
+	char new_str[STR_SIZE];
+	strcpy_s(new_str, str);
+	title_changer(new_str, a1, a2);
+	for (int i = 0; i < strlen(new_str) - 1; i++) {
+		count = 0;
+		if (alphCheck(new_str[i], a2)) {
+			common = new_str[i];
+			for (int j = i; j < strlen(new_str) - 1; j++) {
+				if (new_str[i] == new_str[j]) {
+					++count;
+					if (count > 1) {
+						for (int del = j; del < strlen(new_str); del++) {
+							new_str[del] = new_str[del + 1];
+						}
+					}
+				}
+			}
+			if (count > max) {
+				max = count;
+				max_common = new_str[i];
+			}
+			cout << "[ " << common << " ] = " << count << endl;
+		}
+	}
+	cout << "max - ' " << max_common << " ' = " << max << endl;
+	int c = 0;
+	for (int i = 0; i < strlen(a2); i++) {
+		if (a2[i] == max_common) {
+			if (i >	5)
+				*shift = strlen(a2) - i + 5;
+			else
+				*shift = 5 - i;
+		}
+	}
+}
+
+void alphShift(int shift, char* str, char* alphabet1, char* alphabet2) {	//	Ф-ция алфавитного сдвига
+	for (int i = 0; i < strlen(str); i++) {
+		for (int j = 0; j < strlen(alphabet2); j++) {
+			if (str[i] == alphabet2[j]) {
+				if (j > (strlen(alphabet2) - 1) - shift) {
+					j -= strlen(alphabet2) - shift;
+				}
+				else
+					j += shift;
+				str[i] = alphabet2[j];
+				break;
+			}
+			if (str[i] == alphabet1[j]) {
+				if (j > (strlen(alphabet1) - 1) - shift) {
+					j -= strlen(alphabet1) - shift;
+				}
+				else
+					j += shift;
+				str[i] = alphabet1[j];
+				break;
+			}
+		}
+	}
+		puts(str);
+}
+
+void main() {
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+
+	char alphabet1[] = { "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" };
+	char alphabet2[] = { "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" };
+	char str[STR_SIZE];
+	int shift;
+
+	fgets(str, 1024, stdin);
+	clock_t begin_time = clock();
+	frequencyAnalysis(str, &shift, alphabet1, alphabet2);
+	alphShift(shift, str, alphabet1, alphabet2);
+	clock_t end_time = clock() - begin_time;
+	cout << "Время расшифровки: " << end_time << " мс." << endl;
+	return;
+}
