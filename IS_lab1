@@ -1,0 +1,33 @@
+#include <iostream>
+#include <fstream>
+#include <string.h>
+#include <time.h> //Подключение библиотек
+using namespace std; //Подключение пространства имён
+
+ void main() {
+   int quantityLines = 90; //Количество строк
+   int passLength = 6; //Длинна пароля
+   //Набор символов для генерации
+   char str[]{
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+,-
+  ./|\\\"':;<=>?@[]^_`{}~" };
+   srand(time(NULL)); //Инициализация базы для генератора псевдослучайных чисел
+   char* pass = new char[passLength + 1]; //Длинна строки
+   ofstream out; //Переменная для работы с файлом
+   out.open("U:\\password.txt"); //Открытие потока для работы с файлом
+
+   if (out.is_open()) { //Проверяем существует ли файл
+     for (int i = 0; i < quantityLines; i++) { //Цикл записи строк
+       for (int j = 0; j < passLength; j++) { //Цикл записи
+         pass[j] = str[rand() % strlen(str)]; //Запись пароля
+       }
+       pass[passLength] = 0; //Обнуление строки
+       out << pass << endl; //Запись в файл
+     }
+   }
+   else
+     cout << "File not found!\n"; //Вывод предупреждения, если файл не найден
+   out.close(); //Закрытие потока для работы с файлом
+   out.flush(); //Очистка выходной последовательности
+   getchar(); getchar(); //Завершение программы
+ }
