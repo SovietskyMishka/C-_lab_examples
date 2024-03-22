@@ -1,0 +1,14 @@
+#include <iostream> #include <cstring> #include <Windows.h>
+const int STR_SIZE = 40; void main() {
+SetConsoleOutputCP(1251); SetConsoleCP(1251);
+char alph0[] = { "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" }; char alph_word[] = { "АБОРИГЕНВДЁЖЗЙКЛМПСТУФХЦЧШЩЪЫЬЭЮЯ" };
+char str[STR_SIZE];
+std::cout << "Введите какие-нибудь словечки: " << std::endl; fgets(str, 40, stdin);
+for (int i = 0; i < strlen(str); i++) {
+for (int j = 0; j < strlen(alph0); j++) { if (str[i] == alph0[j]) {
+str[i] = alph_word[j]; break;
+}
+}
+}
+std::cout << str; return;
+}
