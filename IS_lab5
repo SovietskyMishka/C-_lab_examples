@@ -1,0 +1,64 @@
+// Дешифратор на основе частотного анализа
+
+#include <iostream>
+#include <cstring>
+#include <Windows.h>
+using namespace std;
+
+const int STR_SIZE = 1024;
+
+int alphCheck(char str, char* a2) {		//	Ф-ция проверки алфавита
+	for (int i = 0; i < strlen(a2); i++) {
+		if (a2[i] == str)
+			return 1;
+	}
+	return 0;
+}
+
+void frequencyAnalysis(char* str, char* alph) {		//	Ф-ция частотного анализа
+	int count;
+	char frequent, new_str[STR_SIZE];
+	strcpy_s(new_str, str);
+	for (int i = 0; i < strlen(new_str) - 1; i++) {
+		count = 0;
+		if (alphCheck(new_str[i], alph)) {
+			frequent = new_str[i];
+			for (int j = i; j < strlen(new_str) - 1; j++) {
+				if (new_str[i] == new_str[j]) {
+					++count;
+					if (count > 1) {
+						for (int del = j; del < strlen(new_str); del++) {
+							new_str[del] = new_str[del + 1];
+						}
+					}
+				}
+			}
+			cout << "' " << frequent << " ' = " << count << endl;
+		}
+	}
+}
+
+int change(char* str, char* alph) {
+	char AC[] = { "дигйквЁлмнопбрсжтзуефхцчЧШшыьэаюя" };
+	for (int i = 0; i < strlen(str); i++) {
+		for (int j = 0; j < strlen(alph); j++) {
+			if (str[i] == alph[j]) {
+				str[i] = AC[j];
+				break;
+			}
+		}
+	}
+	cout << str;
+	return 0;
+}
+
+void main() {
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	char alphabet[] = { "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" };
+	char str[STR_SIZE];
+	fgets(str, 1024, stdin);
+	frequencyAnalysis(str, alphabet);
+	change(str, alphabet);
+	return;
+}
